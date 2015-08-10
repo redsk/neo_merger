@@ -21,8 +21,8 @@ How-To
     cd neo-kbs
     git clone https://github.com/redsk/neo_merger.git
 
-    # Follow [Neo_Concept](https://github.com/redsk/neo_concept) how-to but do not import the two CSV files
-    # Follow [Neo_Wordnet](https://github.com/redsk/neo_wordnet) how-to but do not import the two CSV files
+    # Follow Neo_Concept how-to but do not import the two CSV files
+    # Follow Neo_Wordnet how-to but do not import the two CSV files
 
     mkdir merged-kbs
     python neo_merger/neo_merger.py wordnet/WNnodes.csv wordnet/WNedges.csv conceptnet/nodes.csv conceptnet/edgesPOS.csv merged-kbs/nodes.csv merged-kbs/edges.csv
