@@ -1,4 +1,4 @@
-Neo_Wordnet
+Neo_Merger
 -----------
 
 This software matches [WordNet](http://wordnet-rdf.princeton.edu/) and [ConceptNet 5.3](http://conceptnet5.media.mit.edu/downloads/current/) and loads them into neo4j 2.2.2. 
