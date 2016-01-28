@@ -7,12 +7,12 @@ This is a sister project of [Neo_Concept](https://github.com/redsk/neo_concept) 
 Pre-Requisites
 --------------
 
-- neo4j version 2.2.2 (needed for the [new import tool](http://neo4j.com/docs/2.2.2/import-tool.html))
+- neo4j version >= 2.2.2 (needed for the [new import tool](http://neo4j.com/docs/2.2.2/import-tool.html))
 - [Neo_Concept](https://github.com/redsk/neo_concept)
 - [Neo_Wordnet](https://github.com/redsk/neo_wordnet)
 - regular Python, no dependencies
 
-Tested with neo4j-community-2.2.2.
+Tested with neo4j-community-2.2.2 and 3.0.0-M02.
 
 How-To 
 -------------------

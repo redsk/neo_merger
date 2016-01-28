@@ -139,7 +139,7 @@ class MatchKBs():
                                 # of.write( '"{0}"'.format( ';'.join(i[f]) ) )
                         line += '\t'
                         #of.write('\t')
-                    of.write( line + '\n' )
+                    of.write( line[:-1] + '\n' ) # line[:-1] because there's an extra tab at the end
                     # of.write('\n')
 
 
