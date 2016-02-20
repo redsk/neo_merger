@@ -23,6 +23,11 @@ class MatchKBs():
         self.CNrelsList, self.CNrelsFields, self.CNrelsTypes = self.readCSV(self.CNedgesFilename)
         print 'done.'
 
+        print 'Adding KB source property to relationships...',
+        sys.stdout.flush()
+        self.addKBsourceProperty()
+        print 'done.'
+
         print 'Creating data structures...',
         sys.stdout.flush()
         self.wn = OrderedDictionary(self.getDictFromListOfNodes(self.WNnodesList))
@@ -31,7 +36,7 @@ class MatchKBs():
 
         print 'Writing merged Nodes File...',
         sys.stdout.flush()
-        self.writeCSV( self.matchedNodesFilename, 
+        self.writeCSV( self.matchedNodesFilename,
                        [self.WNnodesList, self.CNnodesList], \
                        [self.WNnodesFields, self.CNnodesFields], \
                        [self.WNnodesTypes, self.CNnodesTypes] )
@@ -49,7 +54,6 @@ class MatchKBs():
                        [self.WNrelsFields, self.CNrelsFields], \
                        [self.WNrelsTypes, self.CNrelsTypes] )
         print 'done.'
-
 
 
     def readCSV(self, filename):
@@ -70,12 +74,12 @@ class MatchKBs():
             else:
                 t = 's' # string
             if '[]' in f:
-                t = t + 'a' # array of 
-            # override for 'id:ID' and ':LABEL'
+                t = t + 'a' # array of
+            # override for 'id:ID', ':LABEL', etc.
             if f in ['id:ID', ':LABEL', ':START_ID', ':END_ID',  ':TYPE']:
                 t = 's'
             types.append(t)
-        
+
         l = []
         for i in range(1, len(lines)):
             values = lines[i][:-1].split('\t') # [:-1] to remove '\n'
@@ -84,7 +88,7 @@ class MatchKBs():
             # if name.startswith('wn/'):
             #     name = name[3:]
 
-            n = {} 
+            n = {}
             for j in range(0, len(values)):
                 if values[j] != '' and values[j] != '""':   # in that case, the value is null for that record
                     if types[j] == 'i':
@@ -104,6 +108,18 @@ class MatchKBs():
                         n[fields[j]] = values[j][1:-1].split(';')
             l.append(n)
         return l, fields, types
+
+    # A 'KB' source property is added to relationships to make it easier to
+    # calculate paths that stay within specific KBs.
+    def addKBsourceProperty(self):
+        self.WNrelsFields.append('KB')
+        self.CNrelsFields.append('KB')
+        self.WNrelsTypes.append('s')
+        self.CNrelsTypes.append('s')
+        for r in self.WNrelsList:
+            r['KB'] = "W"
+        for r in self.CNrelsList:
+            r['KB'] = "C"
 
 
     def getDictFromListOfNodes(self, l):
@@ -129,13 +145,13 @@ class MatchKBs():
                                 line += str(i[f])
                                 #of.write(str(i[f]))
                             elif matchedTypes[idx] == 's':
-                                line += '"{0}"'.format(i[f]) 
+                                line += '"{0}"'.format(i[f])
                                 # of.write( '"{0}"'.format(i[f]) )
                             elif matchedTypes[idx] in ['ia', 'fa']:
-                                line += '"{0}"'.format( ';'.join([str(j) for j in i[f]]) ) 
+                                line += '"{0}"'.format( ';'.join([str(j) for j in i[f]]) )
                                 # of.write( '"{0}"'.format( ';'.join([str(j) for j in i[f]]) ) )
                             elif matchedTypes[idx] == 'sa':
-                                line += '"{0}"'.format( ';'.join(i[f]) ) 
+                                line += '"{0}"'.format( ';'.join(i[f]) )
                                 # of.write( '"{0}"'.format( ';'.join(i[f]) ) )
                         line += '\t'
                         #of.write('\t')
@@ -154,8 +170,9 @@ class MatchKBs():
                     matchedTypes.append( TypesList[idxFL][idxF] )
         return matchedFields, matchedTypes
 
+
     def addRel(self, c, w):
-        self.matchedRels.append( {':START_ID': c, ':END_ID': w, ':TYPE': 'KBmatch'} )
+        self.matchedRels.append( {':START_ID':c, ':END_ID':w, ':TYPE':'KBmatch', 'KB':'M'} )
 
 
     def matchNodes(self):
@@ -189,11 +206,11 @@ class MatchKBs():
                                 mf = True
                             else:
                                 multiple_matched += 1
-                    
+
             if idx % 100000 == 0:
                 print '.',
                 sys.stdout.flush()
-        print matched, multiple_matched
+        print matched, multiple_matched,
 
 
 class OrderedDictionary():
@@ -203,7 +220,7 @@ class OrderedDictionary():
         self.d = {}
         for i in range(0, len(self.n)):
             self.d[ self.n[i] ] = i
-            
+
     def __getitem__(self, indexOrString):
         if type(indexOrString) is str:
             return self.nd[indexOrString]
@@ -212,16 +229,16 @@ class OrderedDictionary():
         else:
             errorMessage = self.__class__.__name__ + 'indices must be integers or strings, not ' + str(type(indexOrString))
             raise TypeError(errorMessage)
-    
+
     def pos(self, element):
         return self.d[element]
-    
+
     def next(self, element):
         p = self.d[element]
         if p + 1 < len(self.n):
             return self.nd[ self.n[p + 1] ]
         return None
-    
+
     def sameRoot(self, element):
         res = []
         root = element.split('#')[0]
@@ -254,5 +271,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

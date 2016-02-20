@@ -1,8 +1,12 @@
 Neo_Merger
 -----------
 
-This software matches [WordNet](http://wordnet-rdf.princeton.edu/) and [ConceptNet 5.3](http://conceptnet5.media.mit.edu/downloads/current/) and loads them into neo4j 2.2.2. 
+This software matches [WordNet](http://wordnet-rdf.princeton.edu/) and [ConceptNet 5.3](http://conceptnet5.media.mit.edu/downloads/current/) and loads them into neo4j 2.2.2.
 This is a sister project of [Neo_Concept](https://github.com/redsk/neo_concept) and [Neo_Wordnet](https://github.com/redsk/neo_wordnet).
+
+It matches ConceptNet and Wordnet nodes with a simple algorithm. Matched nodes are connected with relationships of type 'KBmatch'.
+A 'KB' source property is added to each relationship to make it easier to calculate paths that stay within specific KBs.
+It has values in 'C', 'W', and 'M' for ConceptNet, Wordnet, and matched relationships, respectively.
 
 Pre-Requisites
 --------------
@@ -14,7 +18,7 @@ Pre-Requisites
 
 Tested with neo4j-community-2.2.2 and 3.0.0-M02.
 
-How-To 
+How-To
 -------------------
 
     mkdir neo-kbs
