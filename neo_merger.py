@@ -1,16 +1,18 @@
 import sys
 
 
-class MatchKBs():
-    def __init__(self, WNnodesFilename, WNedgesFilename, CNnodesFilename, CNedgesFilename, matchedNodesFilename, matchedEdgesFilename):
+class MergeKBs():
+    def __init__(self, WNnodesFilename, WNedgesFilename, CNnodesFilename, CNedgesFilename, matchedNodesFilename, matchedEdgesFilename, matchKBs):
         self.WNnodesFilename = WNnodesFilename
         self.WNedgesFilename = WNedgesFilename
         self.CNnodesFilename = CNnodesFilename
         self.CNedgesFilename = CNedgesFilename
         self.matchedNodesFilename = matchedNodesFilename
         self.matchedEdgesFilename = matchedEdgesFilename
+        self.matchedRels = []
+        self.matchKBs = matchKBs
 
-    def matchKBs(self):
+    def mergeKBs(self):
         print 'Reading WordNet nodes and edges...',
         sys.stdout.flush()
         self.WNnodesList, self.WNnodesFields, self.WNnodesTypes = self.readCSV(self.WNnodesFilename)
@@ -42,10 +44,11 @@ class MatchKBs():
                        [self.WNnodesTypes, self.CNnodesTypes] )
         print 'done.'
 
-        print 'Matching nodes...',
-        sys.stdout.flush()
-        self.matchNodes()
-        print 'done.'
+        if self.matchKBs == 'match':
+            print 'Matching nodes...',
+            sys.stdout.flush()
+            self.matchNodes()
+            print 'done.'
 
         print 'Writing merged Edges File...',
         sys.stdout.flush()
@@ -261,13 +264,13 @@ def main():
     m = None
     numargs = len(sys.argv)
     if numargs == 1:
-        m = MatchKBs('wordnet/WNnodes.csv', 'wordnet/WNedges.csv', 'conceptnet/nodes.csv', 'conceptnet/edgesPOS.csv', 'merged-kbs/nodes.csv', 'merged-kbs/edges.csv')
-    if numargs == 7:
-        m = MatchKBs(*sys.argv[1:])
-    if numargs != 1 and numargs != 7:
-        print "Usage:\npython neo_merger.py <wordnet nodes> <wordnet edges> <conceptnet nodes> <conceptnet edges> <output nodes> <output edges>\n"
+        m = MergeKBs('wordnet/WNnodes.csv', 'wordnet/WNedges.csv', 'conceptnet/nodes.csv', 'conceptnet/edgesPOS.csv', 'merged-kbs/nodes.csv', 'merged-kbs/edges.csv', 'nomatch')
+    if numargs == 8:
+        m = MergeKBs(*sys.argv[1:])
+    if numargs != 1 and numargs != 8:
+        print "Usage:\npython neo_merger.py <wordnet nodes> <wordnet edges> <conceptnet nodes> <conceptnet edges> <output nodes> <output edges> match|nomatch\n"
     else:
-        m.matchKBs()
+        m.mergeKBs()
 
 if __name__ == "__main__":
     main()
